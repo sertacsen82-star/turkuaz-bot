@@ -11,20 +11,20 @@ BINANCE_API_KEY = os.environ.get("BINANCE_API_KEY")
 BINANCE_SECRET_KEY = os.environ.get("BINANCE_SECRET_KEY")
 
 claude = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-binance = Client(BINANCE_API_KEY, BINANCE_SECRET_KEY)
 
 SYSTEM_PROMPT = """Sen Sertac'in kisisel asistanisin. Yara bakim uzmani, estetik cerrah ve yatirimci. Turkce konus, kisa ve oz yanitlar ver."""
 
 def get_binance_summary():
     try:
+        binance = Client(BINANCE_API_KEY, BINANCE_SECRET_KEY, tld='com')
         futures = binance.futures_account()
         positions = [p for p in futures['positions'] if float(p['positionAmt']) != 0]
         summary = "Binance Futures:\n"
         for p in positions:
             summary += f"{p['symbol']}: {float(p['unrealizedProfit']):.2f} USDT\n"
         return summary
-    except:
-        return "Binance verisi alinamadi."
+    except Exception as e:
+        return f"Binance verisi alinamadi: {str(e)}"
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
