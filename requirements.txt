@@ -1,2 +1,7 @@
 anthropic
 python-telegram-bot
+fastapi
+uvicorn[standard]
+httpx
+redis
+python-dotenv
